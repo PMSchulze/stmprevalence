@@ -20,7 +20,7 @@ sample_props_logisticn(
 
 \item{est_var}{Variable for which to sample over full observed range.}
 
-\item{formula}{Formula object (the prevalence specification used to fit the stm).}
+\item{formula}{Formula (the prevalence specification used to fit the stm).}
 
 \item{metadata}{Metadata that was used to fit the stm.}
 
@@ -31,6 +31,9 @@ sample_props_logisticn(
 \item{ci_upper}{Upper bound of credible interval.}
 
 \item{seed}{Seed.}
+}
+\value{
+A list of dataframes: For each topic, the empirical mean and credible intervals are returned.
 }
 \description{
 Sample mean and credible interval from LogisticNormal for a given model (stmobj)

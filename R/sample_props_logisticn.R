@@ -6,12 +6,13 @@
 #'
 #' @param stmobj Fitted stm model.
 #' @param est_var Variable for which to sample over full observed range.
-#' @param formula Formula object (the prevalence specification used to fit the stm).
+#' @param formula Formula (the prevalence specification used to fit the stm).
 #' @param metadata Metadata that was used to fit the stm.
 #' @param nsims Number of draws from the LogisticNormal used to obtain empirical mean and quantiles.
 #' @param ci_lower Lower bound of credible interval.
 #' @param ci_upper Upper bound of credible interval.
 #' @param seed Seed.
+#' @return A list of dataframes: For each topic, the empirical mean and credible intervals are returned.
 #' @export
 sample_props_logisticn <- function(stmobj, est_var, formula, metadata, nsims = 1000,
                                    ci_lower = 0.025, ci_upper = 0.975, seed = NULL) {

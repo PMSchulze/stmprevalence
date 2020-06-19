@@ -1,6 +1,20 @@
-# implements method of composition:
-## (1) perform nsim regressions (beta regression or quasibinomial glm, depending on specified type)
-## (2) sample from resulting distributions of regression coefficents
+#' Perform Method of Composition employing either a quasibinomial GLM or beta regression
+#'
+#' For a fitted stm, first sample topic proportions from the approximate prosterior,
+#' then perform a regression of these proportions on prevalence covariates,
+#' and lastly sample from the resulting distribution of regression coefficents.
+#' The obtained values of this process, which is repeated nsims times,
+#' are samples of the marginal posterior of regression coefficients.
+#' This procedure is known as the method of composition in the social sciences.
+#'
+#' @param stmobj Fitted stm model.
+#' @param formula Formula (subset of the prevalence specification used to fit the stm).
+#' @param type Regression to perform: Either 'beta' or 'quasibinomial'.
+#' @param metadata Metadata that was used to fit the stm.
+#' @param nsims Number of repetitions.
+#' @param seed Seed.
+#' @return A list of lists: For each topic, nsims regression outputs are returned.
+#' @export
 sample_coefs <- function(stmobj, formula, type, metadata, nsims = 25, seed = NULL) {
   response <- as.character(formula)[2]
   topic_n <- eval(parse(text=response))
@@ -23,8 +37,21 @@ sample_coefs <- function(stmobj, formula, type, metadata, nsims = 25, seed = NUL
   return(setNames(res, topic_nam))
 }
 
-# obtain theta proportions and credible intervals (given set of previously sampled coefficients)
-## for full range of variable est_var, holding all variables but est_var as median/majority
+
+#' Generate mean and credible intervals of topic proportions over full range of a specified variable
+#'
+#' Given the samples of coefficients obtained using sample_coefs, specify one variable and predict
+#' mean and credible intervals of topic proportions over the full observed range of variable est_var,
+#' while holding all other variables as median/majority. This function is typically used to visualize
+#' the results of the method of composition.
+#'
+#' @param est_var Variable for which to sample over full observed range.
+#' @param formula Formula (subset of the prevalence specification used to fit the stm).
+#' @param metadata Metadata that was used to fit the stm.
+#' @param ci_lower Lower bound of credible interval.
+#' @param ci_upper Upper bound of credible interval.
+#' @return A list of dataframes: For each topic, the empirical mean and credible intervals are returned.
+#' @export
 predict_props <- function(beta_coefs, est_var, formula,
                           metadata, ci_lower = 0.025, ci_upper = 0.975) {
   response <- as.character(formula)[2]
