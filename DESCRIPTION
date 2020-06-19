@@ -3,10 +3,11 @@ Package: stmprevalence
 Title: Inspect Relation between Prevalence Covariates and Topic Proportions
 Version: 0.1.0
 Author: Patrick Schulze
-Description: We implement the method of composition, where instead of OLS user can choose
-    between a quasibinomial GLM and a betaregression. Furthermore, we provide functions to 
-    directly asses the relationship between prevalence covariates and topic proportions,
-    by sampling from a logistic normal distribution with parameters from stm output.
+Description: We implement the method of composition, where instead of an OLS regression,
+    the user can choose between a quasibinomial GLM and a betaregression. 
+    Furthermore, we provide functions to directly assess the relationship between
+    prevalence covariates and topic proportions, by sampling from a logistic normal
+    distribution with parameters from the stm output.
 Maintainer: Patrick Schulze <pa.schulze@campus.lmu.de>
 License: What license is it under?
 URL: https://github.com/PMSchulze/stmprevalence
