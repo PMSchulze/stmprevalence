@@ -12,13 +12,13 @@ Maintainer: Patrick Schulze <pa.schulze@campus.lmu.de>
 License: What license is it under?
 URL: https://github.com/PMSchulze/stmprevalence
 Depends:
-    R (>= 3.4.0)
+    R (>= 3.4.0),
+    stm
 Imports:
     betareg,
     matrixStats,
     mvtnorm,
-    quanteda,
-    stm
+    quanteda
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
