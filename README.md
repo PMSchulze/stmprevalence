@@ -1,2 +1,0 @@
-# stmprevalence
-stmprevalence
