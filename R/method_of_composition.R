@@ -41,7 +41,8 @@ sample_coefs <- function(stmobj, formula, type, metadata, nsims = 25, seed = NUL
 #' Generate mean and credible intervals of topic proportions over full range of a specified variable
 #'
 #' Given the samples of coefficients obtained using sample_coefs, specify one variable and predict
-#' mean and credible intervals of topic proportions over the full observed range of variable est_var,
+#' mean and credible intervals (with respect to mean prediction) of topic proportions
+#' over the full observed range of variable est_var,
 #' while holding all other variables as median/majority. This function is typically used to visualize
 #' the results of the method of composition.
 #'
@@ -108,5 +109,50 @@ beta_bayes <- function(stmobj, formula, metadata, nsims = 100, seed = 123) {
         algorithm = "optimizing", seed = seed
       )})
   }
+  return(setNames(res, topic_nam))
+}
+
+
+#' Generate mean and credible intervals of topic proportions over full range of a specified variable
+#'
+#' Given the MAP estimates obtained using beta_bayes, specify one variable and predict
+#' mean and credible intervals of topic proportions over the full observed range of variable est_var,
+#' while holding all other variables as median/majority. This function is typically used to visualize
+#' the results of the method of composition.
+#'
+#' @param est_var Variable for which to sample over full observed range.
+#' @param formula Formula (subset of the prevalence specification used to fit the stm).
+#' @param metadata Metadata that was used to fit the stm.
+#' @param ci_lower Lower bound of credible interval.
+#' @param ci_upper Upper bound of credible interval.
+#' @return A list of dataframes: For each topic, the empirical mean and credible intervals are returned.
+#' @export
+posterior_predict_props <- function(est_var, formula, metadata, ci_lower, ci_upper) {
+  response <- as.character(formula)[2]
+  topic_n <- eval(parse(text=response))
+  topic_nam <- paste0("Topic", topic_n)
+  # --------------------------------------------------------------------------------------------
+  if(is.numeric(metadata[,est_var])) {
+    range_est_var <- seq(min(metadata[,est_var]), max(metadata[,est_var]), length.out = 500)
+  } else {
+    range_est_var <- unique(metadata[,est_var])
+  }
+  dat_new <- lapply(metadata[, -which(names(metadata) == est_var)],
+                    function(x) if(is.numeric(x)) median(x) else majority(x))
+  xmat <- data.frame(dat_new, range_est_var)
+  names(xmat) <- c(names(dat_new),est_var)
+  levels(xmat$Partei) <- levels(metadata$Partei)
+  levels(xmat$Bundesland) <- levels(metadata$Bundesland)
+  # ----------------------------------------------------------------------------------------------
+  res <- list()
+  for (k in topic_nam){
+    preds_topic1 <- do.call(rbind,
+                            lapply(mod_betaregs[[k]], function(x) posterior_predict(x, xmat, draws = 1000)))
+    mu <- colMeans(preds_topic1)
+    ci_lower <- apply(preds_topic1, 2, quantile, ci_lower)
+    ci_upper <- apply(preds_topic1, 2, quantile, ci_upper)
+    res <- setNames(data.frame(range_est_var, mu, ci_lower, ci_upper), nm)
+  }
+  # ----------------------------------------------------------------------------------------------
   return(setNames(res, topic_nam))
 }
