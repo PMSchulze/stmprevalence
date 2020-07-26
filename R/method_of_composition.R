@@ -73,3 +73,40 @@ predict_props <- function(beta_coefs, est_var, formula,
   }
   return(setNames(res, topic_nam))
 }
+
+
+#' Apply fully Bayesian version of method of composition
+#'
+#' For a fitted stm, first sample topic proportions from the approximate prosterior,
+#' and then perform a Bayesian beta regression of these proportions on prevalence covariates.
+#' The procedure is repeated nsims times.
+#'
+#' @param stmobj Fitted stm model.
+#' @param formula Formula (subset of the prevalence specification used to fit the stm).
+#' @param metadata Metadata that was used to fit the stm.
+#' @param nsims Number of repetitions.
+#' @param seed Seed.
+#' @return A list of lists: For each topic, nsims regression outputs are returned.
+#' @export
+beta_bayes <- function(stmobj, formula, metadata, nsims = 100, seed = 123) {
+  response <- as.character(formula)[2]
+  topic_n <- eval(parse(text=response))
+  topic_nam <- paste0("Topic", topic_n)
+  f <- paste(topic_nam, "~", as.character(formula)[3])
+  res <- list()
+  set.seed(seed)
+  for (k in 1:length(topic_n)) {
+    theta_sim <- do.call(rbind,
+                         stm::thetaPosterior(stmobj, nsims = nsims, type = "Global"))[,topic_n[k]]
+    theta_sim <- lapply(split(1:(NROW(theta_sim)), 1:nsims),
+                        function(i) setNames(data.frame(theta_sim[i]), topic_nam[k]))
+    res[[k]] <- lapply(theta_sim, function(x) {
+      rstanarm::stan_betareg(
+        formula = as.formula(f[k]),
+        link = "logit", link.phi = "log",
+        data = cbind(x, metadata),
+        algorithm = "optimizing", seed = seed
+      )})
+  }
+  return(setNames(res, topic_nam))
+}
