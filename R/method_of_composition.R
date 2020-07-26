@@ -150,11 +150,11 @@ posterior_predict_props1 <- function(bayes_out, est_var, formula, metadata, ci_l
   res <- list()
   for (k in topic_nam){
     preds <- do.call(rbind, lapply(bayes_out[[k]],
-                                   function(x) rstanarm::posterior_predict(x, xmat, draws = 10)))
+                                   function(x) rstanarm::posterior_predict(x, xmat, draws = 1000)))
     mu <- colMeans(preds)
-    ci_lower <- apply(preds, 2, quantile, ci_lower)
-    ci_upper <- apply(preds, 2, quantile, ci_upper)
-    res[[k]] <- setNames(data.frame(range_est_var, mu, ci_lower, ci_upper), nm)
+    ci_l <- apply(preds, 2, quantile, ci_lower)
+    ci_u <- apply(preds, 2, quantile, ci_upper)
+    res[[k]] <- setNames(data.frame(range_est_var, mu, ci_l, ci_u), nm)
   }
   # ----------------------------------------------------------------------------------------------
   return(setNames(res, topic_nam))
