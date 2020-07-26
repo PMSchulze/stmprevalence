@@ -14,6 +14,8 @@ predict_props(
 )
 }
 \arguments{
+\item{beta_coefs}{sampled coefficients from method of composition using sample_coefs}
+
 \item{est_var}{Variable for which to sample over full observed range.}
 
 \item{formula}{Formula (subset of the prevalence specification used to fit the stm).}

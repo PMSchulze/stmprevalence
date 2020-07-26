@@ -46,6 +46,7 @@ sample_coefs <- function(stmobj, formula, type, metadata, nsims = 25, seed = NUL
 #' while holding all other variables as median/majority. This function is typically used to visualize
 #' the results of the method of composition.
 #'
+#' @param beta_coefs sampled coefficients from method of composition using sample_coefs
 #' @param est_var Variable for which to sample over full observed range.
 #' @param formula Formula (subset of the prevalence specification used to fit the stm).
 #' @param metadata Metadata that was used to fit the stm.
@@ -120,6 +121,7 @@ beta_bayes <- function(stmobj, formula, metadata, nsims = 100, seed = 123) {
 #' while holding all other variables as median/majority. This function is typically used to visualize
 #' the results of the method of composition.
 #'
+#' @param bayes_out Output of method of composition with Bayesian regression using beta_bayes
 #' @param est_var Variable for which to sample over full observed range.
 #' @param formula Formula (subset of the prevalence specification used to fit the stm).
 #' @param metadata Metadata that was used to fit the stm.
@@ -127,12 +129,12 @@ beta_bayes <- function(stmobj, formula, metadata, nsims = 100, seed = 123) {
 #' @param ci_upper Upper bound of credible interval.
 #' @return A list of dataframes: For each topic, the empirical mean and credible intervals are returned.
 #' @export
-posterior_predict_props <- function(est_var, formula, metadata, ci_lower, ci_upper) {
+posterior_predict_props1 <- function(bayes_out, est_var, formula, metadata, ci_lower, ci_upper) {
   response <- as.character(formula)[2]
   topic_n <- eval(parse(text=response))
   topic_nam <- paste0("Topic", topic_n)
   # --------------------------------------------------------------------------------------------
-  if(is.numeric(metadata[,est_var])) {
+  if(is.numeric(metadata[ ,est_var])) {
     range_est_var <- seq(min(metadata[,est_var]), max(metadata[,est_var]), length.out = 500)
   } else {
     range_est_var <- unique(metadata[,est_var])
@@ -144,14 +146,15 @@ posterior_predict_props <- function(est_var, formula, metadata, ci_lower, ci_upp
   levels(xmat$Partei) <- levels(metadata$Partei)
   levels(xmat$Bundesland) <- levels(metadata$Bundesland)
   # ----------------------------------------------------------------------------------------------
+  nm <- c(est_var, "proportion", "ci_lower", "ci_upper")
   res <- list()
   for (k in topic_nam){
-    preds_topic1 <- do.call(rbind,
-                            lapply(mod_betaregs[[k]], function(x) posterior_predict(x, xmat, draws = 1000)))
-    mu <- colMeans(preds_topic1)
-    ci_lower <- apply(preds_topic1, 2, quantile, ci_lower)
-    ci_upper <- apply(preds_topic1, 2, quantile, ci_upper)
-    res <- setNames(data.frame(range_est_var, mu, ci_lower, ci_upper), nm)
+    preds <- do.call(rbind, lapply(bayes_out[[k]],
+                                   function(x) rstanarm::posterior_predict(x, xmat, draws = 10)))
+    mu <- colMeans(preds)
+    ci_lower <- apply(preds, 2, quantile, ci_lower)
+    ci_upper <- apply(preds, 2, quantile, ci_upper)
+    res[[k]] <- setNames(data.frame(range_est_var, mu, ci_lower, ci_upper), nm)
   }
   # ----------------------------------------------------------------------------------------------
   return(setNames(res, topic_nam))
