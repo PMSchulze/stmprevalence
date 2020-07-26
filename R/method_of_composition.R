@@ -129,7 +129,7 @@ beta_bayes <- function(stmobj, formula, metadata, nsims = 100, seed = 123) {
 #' @param ci_upper Upper bound of credible interval.
 #' @return A list of dataframes: For each topic, the empirical mean and credible intervals are returned.
 #' @export
-posterior_predict_props1 <- function(bayes_out, est_var, formula, metadata, ci_lower, ci_upper) {
+posterior_predict_props <- function(bayes_out, est_var, formula, metadata, ci_lower, ci_upper) {
   response <- as.character(formula)[2]
   topic_n <- eval(parse(text=response))
   topic_nam <- paste0("Topic", topic_n)
