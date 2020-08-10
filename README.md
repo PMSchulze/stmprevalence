@@ -16,8 +16,8 @@ between prevalence covariates and topic proportions. Namely, these are:
   - Direct assessment of the prevalence output produced by the stm,
     i.e., the MAP estimates for `Gamma` and `Sigma`, by sampling from a
     logistic normal distribution.
-  - Fully Bayesian approach via a Bayesian beta regression (instead of
-    frequentist regression) using the method of composition.
+  - Fully Bayesian version of the method of composition via a Bayesian
+    beta regression (instead of frequentist regression).
 
 The approaches can be used to visualize the empirical mean as well as
 credible intervals of topic proportions for the full observed range of a
@@ -50,12 +50,19 @@ in the stm vignette; see
 load(url("http://goo.gl/VPdxlS"))
 ```
 
+The prevalence formula can be specified in a similar manner as in
+`stm::estimateEffect()`. In this case we choose to perform the method of
+composition for topic 1 and topic 2 (out of 20 topics).
+
+``` r
+prevalence <- 1:2~rating + s(day)
+```
+
 The number of iterations of the method of composition is set to `nsims
 = 5` in this demo (for shorter runtime); in practice this should be much
 higher.
 
 ``` r
-prevalence <- 1:2~rating + s(day)
 nsims <- 5
 ```
 
@@ -91,6 +98,7 @@ ggplot(preds_day$Topic1, aes(day)) +
 ``` r
 preds_logisticn <- stmprevalence::sample_props_logisticn(poliblogPrevFit, "day", prevalence, out$meta)
 
+# Note that uncertainty is now not with respect to mean prediction, but instead just the shows variation in the data 
 plot_smoothed_ci <- ggplot(preds_logisticn$Topic1) +
   stat_smooth(color=NA, aes(x = day, y = ci_lower), method = "loess", se = FALSE) +
   stat_smooth(color=NA, aes(x = day, y = ci_upper), method = "loess", se = FALSE)
@@ -113,7 +121,7 @@ plot_smoothed_ci +
 #### Fully Bayesian version of method of composition (with Bayesian beta regression)
 
 ``` r
-# factorize categorical metadata variables
+# here we have to first factorize all categorical metadata variables
 metadata <- out$meta
 metadata[sapply(metadata, is.character)] <- lapply(metadata[sapply(metadata, is.character)], 
                                                    as.factor)
@@ -125,6 +133,7 @@ mod_betaregs <- stmprevalence::beta_bayes(poliblogPrevFit, prevalence, metadata,
 preds_betas_bayes <- stmprevalence::posterior_predict_props(mod_betaregs, "day", prevalence, metadata, 
                                                           ci_lower = 0.025, ci_upper = 0.975)
 
+# Again, uncertainty is not with respect to mean prediction. Instead, we observe predicted variation in the data at a given level of the covariate.
 plot_smoothed_ci <- ggplot(preds_betas_bayes$Topic1) +
   stat_smooth(color=NA, aes(x = day, y = ci_lower), method = "loess", se = FALSE) +
   stat_smooth(color=NA, aes(x = day, y = ci_upper), method = "loess", se = FALSE)
