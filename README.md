@@ -6,18 +6,9 @@
 This package provides additional functionalities to examine the link
 between prevalence covariates and topic proportions. Namely, these are:
 
-  - Implementation of the method of composition, using either a
-    quasibinomial GLM or a beta regression. The method of composition is
-    implemented in the [stm package](http://www.structuraltopicmodel.com/) (Roberts et. al, 2016, https://doi.org/10.18637/jss.v091.i02)
-    through its function `stm::estimateEffect()`, employing a
-    simple OLS regression. This violates the assumption of (sampled)
-    topic proportions being restricted to `(0,1)`, which is the
-    motivation for our extension.
-  - Direct assessment of the prevalence output produced by the stm,
-    i.e., the MAP estimates for `Gamma` and `Sigma`, by sampling from a
-    logistic normal distribution.
-  - Fully Bayesian version of the method of composition via a Bayesian
-    beta regression (instead of frequentist regression).
+  - Implementation of the method of composition, using either a quasibinomial GLM or a beta regression. The method of composition is implemented in the [stm package](http://www.structuraltopicmodel.com/) (Roberts et. al, 2016, https://doi.org/10.18637/jss.v091.i02) through its function `stm::estimateEffect()`, employing a simple OLS regression. This violates the assumption of (sampled) topic proportions being restricted to `(0,1)`, which is the motivation for our extension.
+  - Direct assessment of the prevalence output produced by the stm, i.e., the MAP estimates for `Gamma` and `Sigma`, by sampling from a logistic normal distribution.
+  - Fully Bayesian version of the method of composition via a Bayesian beta regression (instead of frequentist regression).
 
 The approaches can be used to visualize the empirical mean as well as
 credible intervals of topic proportions for the full observed range of a
