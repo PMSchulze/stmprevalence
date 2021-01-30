@@ -8,8 +8,8 @@ between prevalence covariates and topic proportions. Namely, these are:
 
   - Implementation of the method of composition, using either a
     quasibinomial GLM or a beta regression. The method of composition is
-    implemented in the [stm](http://www.structuraltopicmodel.com/)
-    package through its function `stm::estimateEffect()`, employing a
+    implemented in the [stm package](http://www.structuraltopicmodel.com/) (Roberts et. al, 2016, https://doi.org/10.18637/jss.v091.i02)
+    through its function `stm::estimateEffect()`, employing a
     simple OLS regression. This violates the assumption of (sampled)
     topic proportions being restricted to `(0,1)`, which is the
     motivation for our extension.
