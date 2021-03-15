@@ -143,8 +143,6 @@ posterior_predict_props <- function(bayes_out, est_var, formula, metadata, ci_lo
                     function(x) if(is.numeric(x)) median(x) else majority(x))
   xmat <- data.frame(dat_new, range_est_var)
   names(xmat) <- c(names(dat_new),est_var)
-  levels(xmat$Partei) <- levels(metadata$Partei)
-  levels(xmat$Bundesland) <- levels(metadata$Bundesland)
   # ----------------------------------------------------------------------------------------------
   nm <- c(est_var, "proportion", "ci_lower", "ci_upper")
   res <- list()
