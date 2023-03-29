@@ -21,13 +21,13 @@ You can install `stmprevalence` from github with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("~/stmprevalence")
+devtools::install_github("PMSchulze/stmprevalence")
 ```
 
 ### Examples
 
 ``` r
-# devtools::install_github("~/stmprevalence") # install from github
+# devtools::install_github("PMSchulze/stmprevalence") # install from github
 library(stmprevalence)
 library(stm)
 library(ggplot2)
