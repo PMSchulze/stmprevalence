@@ -82,7 +82,7 @@ monthnames <- months(monthseq)
 axis(1, at = monthseq_num, labels = monthnames)
 ```
 
-![Example estimateEffect](example_plot_estimateEffect.png)
+![Example estimateEffect](figures/example_plot_estimateEffect.png)
 
 #### Method of composition with frequentist Beta regression
 
@@ -117,11 +117,11 @@ ggplot(preds_day[[paste0("Topic", topic)]], aes(day)) +
          geom_line(aes(y = proportion)) +
          scale_x_continuous(breaks = monthseq_num[seq(1, length(monthseq_num), 2)], 
                             labels = monthnames[seq(1, length(monthnames), 2)]) +
-         theme(axis.text=element_text(size=12), 
-               axis.title.x = element_text(size=16))
+         theme(axis.text=element_text(size=10), 
+               axis.title = element_text(size=12))
 ```
 
-![Example frequentist Beta](example_plot_freq_beta.png)
+![Example frequentist Beta](figures/example_plot_freq_beta.png)
 
 #### Direct assessment of the prevalence output via sampling from logistic normal distribution
 
@@ -159,11 +159,11 @@ plot_smoothed_ci +
   ylab("Expected Topic Proportion") +
   scale_x_continuous(breaks = monthseq_num[seq(1, length(monthseq_num), 2)], 
                      labels = monthnames[seq(1, length(monthnames), 2)]) +
-  theme(axis.text=element_text(size=12), 
-        axis.title.x = element_text(size=16))
+  theme(axis.text=element_text(size=10), 
+        axis.title = element_text(size=12))
 ```
 
-![Example direct assessment](example_plot_direct_assessment.png)
+![Example direct assessment](figures/example_plot_direct_assessment.png)
 
 However, compared to the fully Bayesian approach (see below) the direct
 assessment approach exhibits much lower variation. This is due to the
@@ -222,8 +222,9 @@ plot_smoothed_ci +
   xlab("Time (2008)") + 
   scale_x_continuous(breaks = monthseq_num[seq(1, length(monthseq_num), 2)], 
                      labels = monthnames[seq(1, length(monthnames), 2)]) +
-  theme(axis.text=element_text(size=12), 
-        axis.title.x = element_text(size=16))
+  theme(axis.text=element_text(size=10), 
+        axis.title = element_text(size=12))
 ```
 
-![Example fully Bayesian Beta](example_plot_fully_bayesian_beta.png)
+![Example fully Bayesian
+Beta](figures/example_plot_fully_bayesian_beta.png)
