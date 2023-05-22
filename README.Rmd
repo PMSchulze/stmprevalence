@@ -12,9 +12,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-## stmprevalence: Inspect prevalence covariates
+# Analyzing topic-metadata relationships with stmprevalence
 
-This package provides additional functionalities to examine the link between prevalence covariates and topic proportions. Namely, these are:
+This package provides additional functionalities to examine the link between prevalence covariates and topic proportions:
 
 - Implementation of the method of composition based on either a Beta regression or a quasibinomial GLM. The method of composition is implemented in the [stm](http://www.structuraltopicmodel.com/) package through the function `stm::estimateEffect()`, which employs a simple OLS regression. This violates the assumption of (sampled) topic proportions being restricted to `(0,1)`, which is the motivation for our extension.
 - Direct assessment of the prevalence output produced by the \texttt{stm}, i.e., the MAP estimates for `Gamma` and `Sigma`, by sampling from a logistic normal distribution.
@@ -51,7 +51,7 @@ We use a workspace with models already estimated, the same that is used in the s
 load("VignetteObjects.RData") # downloaded from http://goo.gl/VPdxlS
 ```
 
-### Method of composition with OLS via stm::estimateEffect() 
+#### Method of composition with OLS via stm::estimateEffect() 
 
 Let's consider Figure 7 (p.20) from the \texttt{stm} vignette, which is generated based on the `stm::estimateEffect()` function. We first specify the prevalence formula and the topic. In this case we choose to perform the method of composition for topics 1 through 7 (out of 20).
 
